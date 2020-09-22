@@ -6,12 +6,7 @@ from scipy import signal
 from PyQt5 import QtCore, QtGui, QtWidgets
 import pandas
 
-
 # =====================================================================================================================
-# CALCULATORS
-# Test comment for git commit
-
-
 # Area ratio calculator
 def pressure_ratio(epsilon_true, gamma, Gamma):
     config = ConfigParser()
@@ -109,6 +104,8 @@ def determine_performance(alpha, w_t, p_c):
 
 # Plot function
 def plot_microprop_performance():
+    print(ui.filter_status)
+
     config = ConfigParser()
     config.read('engineparameters.ini')
 
@@ -230,8 +227,14 @@ def plot_microprop_performance():
             x_val = x_val[cut_off:]
             y_val = y_val[cut_off:]
 
-            fig.add_trace(go.Scatter(x=loop[VP_1], y=signal.savgol_filter(y_out, 53, 3),
+            if ui.filter_bool.isChecked():
+                fig.add_trace(go.Scatter(x=loop[VP_1], y=signal.savgol_filter(y_out, 53, 3),
                                      name=str(x_labels[VP_2]) + " = " + str(loop[VP_2][n_curve])))
+
+            elif not ui.filter_bool.isChecked():
+                fig.add_trace(go.Scatter(x=loop[VP_1], y=y_out,
+                                     name=str(x_labels[VP_2]) + " = " + str(loop[VP_2][n_curve])))
+
             n_curve += 1
 
         # Format figure
@@ -244,11 +247,14 @@ def plot_microprop_performance():
     print('')
     print('Data plotting complete.')
 
-# Define UI class
+# UI class
 class Ui_MainWindow(object):
+    #def __init__(self):
+    #    self.filter_status = False
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1055, 838)
+        MainWindow.resize(1073, 843)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
@@ -406,7 +412,7 @@ class Ui_MainWindow(object):
         self.n_alpha.setObjectName("n_alpha")
 
         self.groupBox_4 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_4.setGeometry(QtCore.QRect(770, 530, 271, 191))
+        self.groupBox_4.setGeometry(QtCore.QRect(760, 520, 291, 201))
         self.groupBox_4.setObjectName("groupBox_4")
         self.label_24 = QtWidgets.QLabel(self.groupBox_4)
         self.label_24.setGeometry(QtCore.QRect(10, 30, 111, 16))
@@ -443,18 +449,31 @@ class Ui_MainWindow(object):
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
+
+        # Filter Boolean
+        self.filter_bool = QtWidgets.QCheckBox(self.groupBox_4)
+        self.filter_bool.setGeometry(QtCore.QRect(180, 160, 101, 21))
+        self.filter_bool.setObjectName("filter_bool")
+        if self.filter_bool.isChecked:
+            self.filter_status = True
+        elif not self.filter_bool.isChecked:
+            pass
+
+
+
         self.textBrowser = QtWidgets.QTextBrowser(self.centralwidget)
         self.textBrowser.setGeometry(QtCore.QRect(10, 20, 1031, 311))
         self.textBrowser.setObjectName("textBrowser")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1055, 20))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1073, 20))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+        # Plot Button
         self.plot_performance = QtWidgets.QPushButton(self.centralwidget)
         self.plot_performance.setGeometry(QtCore.QRect(870, 740, 171, 51))
         self.plot_performance.setObjectName("plot_performance")
@@ -494,6 +513,7 @@ class Ui_MainWindow(object):
         self.label_26.setText(_translate("MainWindow", "plot variable"))
         self.label_27.setText(_translate("MainWindow", "curve variable"))
         self.label_25.setText(_translate("MainWindow", "y-axis variable"))
+        self.filter_bool.setText(_translate("MainWindow", "Filter output"))
         self.textBrowser.setHtml(_translate("MainWindow",
                                             "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                             "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -518,7 +538,7 @@ class Ui_MainWindow(object):
                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">4 = Momentum Loss</p>\n"
                                             "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">5 = True/ideal exit area ratio</p></body></html>"))
 
-
+# Main
 if __name__ == "__main__":
     import sys
 

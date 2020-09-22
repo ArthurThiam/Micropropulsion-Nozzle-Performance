@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1055</width>
-    <height>838</height>
+    <width>1073</width>
+    <height>843</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -595,10 +595,10 @@
    <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>530</y>
-      <width>271</width>
-      <height>191</height>
+      <x>760</x>
+      <y>520</y>
+      <width>291</width>
+      <height>201</height>
      </rect>
     </property>
     <property name="title">
@@ -727,6 +727,19 @@
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
+    <widget class="QCheckBox" name="filter_bool">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>160</y>
+       <width>101</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Filter output</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QTextBrowser" name="textBrowser">
     <property name="geometry">
@@ -768,7 +781,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1055</width>
+     <width>1073</width>
      <height>20</height>
     </rect>
    </property>
