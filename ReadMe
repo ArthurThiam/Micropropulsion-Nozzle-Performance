@@ -1,0 +1,15 @@
+Overview of required modules:
+
+- numpy
+- plotly
+- scipy
+- pyqt5
+- pandas
+
+All modules can be installed using pip install 'module_name'
+
+Notes:
+
+- The filter option might throw an error whenever few data-points are plotted on the x-axis
+- The current maximum value of some input boxes is limited and will be changed later. if larger values are required the issue can be circumvented by plotting more instances of a
+  certain variable, or by increasing the step size.

@@ -1,23 +1,20 @@
 from numpy import *
-from configparser import ConfigParser
 import plotly.express as px
 import plotly.graph_objects as go
 from scipy import signal
 from PyQt5 import QtCore, QtGui, QtWidgets
 import pandas
-    
+
 # =====================================================================================================================
 # Area ratio calculator
 def pressure_ratio(epsilon_true, gamma, Gamma):
-    config = ConfigParser()
-    config.read('engineparameters.ini')
 
     pressure_ratio_calculated = 0.001
     pressure_stepsize = 0.00005
     epsilon_calculated = 0
 
     error = abs(epsilon_true - epsilon_calculated)
-    threshold = config.getint('parameters', 'threshold')
+    threshold = 1
 
     while error > threshold:
         epsilon_calculated = Gamma / sqrt((2 * gamma / (gamma - 1)) * pressure_ratio_calculated ** (2 / gamma) * (
@@ -31,9 +28,6 @@ def pressure_ratio(epsilon_true, gamma, Gamma):
 
 # Performance Calculator
 def determine_performance(alpha, w_t, p_c):
-    # Import Config file
-    config = ConfigParser()
-    config.read('engineparameters.ini')
 
     # Import Constant Parameters
     gamma = ui.gamma.value()
@@ -68,7 +62,6 @@ def determine_performance(alpha, w_t, p_c):
     m_ideal = (Gamma * p_c * A_t) / sqrt(R * T_c)
     F_ideal = m_ideal * sqrt((2 * gamma / (gamma - 1)) * R * T_c * (1 - (p_e / p_c) ** ((gamma - 1) / gamma)))
     C_F_ideal = F_ideal / (p_c * A_t)
-    I_sp = F_ideal / (m_ideal * 9.81)
     Re_t = (m_ideal * d_h) / (mu * A_t)
 
     # ======================================================================================================================
@@ -93,6 +86,7 @@ def determine_performance(alpha, w_t, p_c):
 
     F_analytical = F_ideal_new * divergence_loss - delta_F_momentum
     n_F = F_analytical / F_ideal
+    I_sp = F_analytical / (m_ideal * 9.81)
 
     performance_parameters = [I_sp, n_F, Re_t, divergence_loss, delta_F_momentum, epsilon_true]  # For data logging
 
@@ -105,9 +99,6 @@ def determine_performance(alpha, w_t, p_c):
 # Plot function
 def plot_microprop_performance():
     print(ui.filter_status)
-
-    config = ConfigParser()
-    config.read('engineparameters.ini')
 
     # Import iteration settings
     alpha_initial = ui.alpha_initial.value()
@@ -125,7 +116,7 @@ def plot_microprop_performance():
     alpha_range = arange(alpha_initial, alpha_initial + n_alpha * delta_alpha, delta_alpha)
     # print('alpha values: ', alpha_range)
 
-    width_range = arange(w_t_initial, round(w_t_initial + n_width * delta_width, 7), delta_width)
+    width_range = arange(w_t_initial, round(w_t_initial + n_width * delta_width, 6), delta_width)
     # print('throat width values: ', width_range)
 
     pressure_range = arange(p_c_initial, p_c_initial + n_pressure * delta_pressure, delta_pressure)
@@ -249,8 +240,6 @@ def plot_microprop_performance():
 
 # UI class
 class Ui_MainWindow(object):
-    #def __init__(self):
-    #    self.filter_status = False
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
