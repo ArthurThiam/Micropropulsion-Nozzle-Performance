@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from scipy import signal
 from PyQt5 import QtCore, QtGui, QtWidgets
 import pandas
-
+    
 # =====================================================================================================================
 # Area ratio calculator
 def pressure_ratio(epsilon_true, gamma, Gamma):
